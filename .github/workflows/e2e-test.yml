@@ -13,11 +13,9 @@ jobs:
           hostname
           echo "=== docker version ==="
           docker version --format 'server:{{.Server.Version}}'
-          echo "=== docker images ==="
-          docker images --format '{{.Repository}}:{{.Tag}}' | head -5
           echo "=== disk ==="
           df -h / | tail -1
-          echo "=== harbor login check ==="
+          echo "=== harbor login ==="
           echo $HARBOR_PASS | docker login harbor.frp.orbai.cn -u $HARBOR_USER --password-stdin
         env:
           HARBOR_USER: ${{ secrets.HARBOR_ROBOT_USER }}
