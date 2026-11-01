@@ -1,0 +1,28 @@
+name: e2e-test
+on: [push]
+
+jobs:
+  test:
+    runs-on: [self-hosted, linux, x64, orbai]
+    steps:
+      - name: Check runner env
+        run: |
+          echo "=== whoami ==="
+          whoami
+          echo "=== hostname ==="
+          hostname
+          echo "=== docker version ==="
+          docker version --format 'server:{{.Server.Version}}'
+          echo "=== docker images ==="
+          docker images --format '{{.Repository}}:{{.Tag}}' | head -5
+          echo "=== disk ==="
+          df -h / | tail -1
+          echo "=== harbor login check ==="
+          echo $HARBOR_PASS | docker login harbor.frp.orbai.cn -u $HARBOR_USER --password-stdin
+        env:
+          HARBOR_USER: ${{ secrets.HARBOR_ROBOT_USER }}
+          HARBOR_PASS: ${{ secrets.HARBOR_ROBOT_PASS }}
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Show repo
+        run: ls -la
